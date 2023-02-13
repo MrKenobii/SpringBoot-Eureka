@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
+    @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> handlerResourceNotFoundException(ResourceNotFoundException exception){
         String message = exception.getMessage();
         ApiResponse response = ApiResponse.builder().message(message).success(true).status(HttpStatus.NOT_FOUND).build();

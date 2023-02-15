@@ -1,11 +1,13 @@
 spring:
+  application:
+    name: RATING-SERVICE
   data:
     mongodb:
       database: microservice
       host: localhost
       port: 27017
-  application:
-    name: RATING-SERVICE
+  config:
+    import: optional:configserver:http://localhost:8085
 server:
   port: 8083
 

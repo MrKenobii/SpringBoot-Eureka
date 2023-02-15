@@ -4,6 +4,8 @@ import com.kenobi.userservice.entities.User;
 import com.kenobi.userservice.services.UserService;
 import com.kenobi.userservice.services.impl.UserServiceImpl;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,9 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsers());
     }
     @GetMapping("/{userId}")
-    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+//    @CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallback")
+//    @Retry(name = "ratingHotelService", fallbackMethod = "ratingHotelFallback")
+    @RateLimiter(name = "userRateLimiter", fallbackMethod = "ratingHotelFallback")
     public ResponseEntity<User> getUserById(@PathVariable String userId){
         return ResponseEntity.ok(userService.getUser(userId));
     }

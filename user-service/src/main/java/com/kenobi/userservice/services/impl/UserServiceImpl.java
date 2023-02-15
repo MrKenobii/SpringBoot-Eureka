@@ -4,6 +4,7 @@ import com.kenobi.userservice.entities.Hotel;
 import com.kenobi.userservice.entities.Rating;
 import com.kenobi.userservice.entities.User;
 import com.kenobi.userservice.exceptions.ResourceNotFoundException;
+import com.kenobi.userservice.external.services.HotelService;
 import com.kenobi.userservice.repositories.UserRepository;
 import com.kenobi.userservice.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
+    private final HotelService hotelService;
     private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     @Override
     public User saveUser(User user) {
@@ -65,9 +67,11 @@ public class UserServiceImpl implements UserService {
         List<Rating> ratings = Arrays.stream(ratingsOfUser).toList();
 
         List<Rating> ratingList = ratings.stream().map(rating -> {
-            ResponseEntity<Hotel> hotel = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
-            Hotel body = hotel.getBody();
-            logger.info("Status: {}, Hotel: {}",hotel.getStatusCode(), body);
+            //ResponseEntity<Hotel> hotel = restTemplate.getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(), Hotel.class);
+
+            //Hotel body = hotel.getBody();
+            Hotel body = hotelService.getHotel(rating.getHotelId());
+            //logger.info("Status: {}, Hotel: {}",hotel.getStatusCode(), body);
             rating.setHotel(body);
             return rating;
         }).collect(Collectors.toList());
